@@ -1,4 +1,3 @@
-// Example
-export function example () {
-    console.log('Hello World');
-}
+import Router from './router';
+
+export { Router };

@@ -28,9 +28,9 @@
   },
   "homepage": "https://github.com/SamuelHornsey/javscript-router#readme",
   "devDependencies": {
-    "http-server": "^0.11.1",
     "rollup": "^1.5.0",
     "rollup-plugin-typescript": "^1.0.0",
+    "spa-http-server": "^0.9.0",
     "tslib": "^1.9.3",
     "typescript": "^3.3.3333"
   }

@@ -9,7 +9,7 @@ A simple Javascript UI router. Written in typescript and bundled as a es6 module
 
 Install using npm and webpack/rollup etc.
 ```
-npm install scorm-promised
+npm install js-router
 ```
 
 Import as module.

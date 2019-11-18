@@ -134,6 +134,4 @@ class Router {
     }
 }
 
-//# sourceMappingURL=index.js.map
-
 export { Router };

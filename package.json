@@ -12,6 +12,9 @@
     "clean": "rimraf dist",
     "precommit": "npm run clean && npm run build:prod && git add -A"
   },
+  "pre-commit": [
+    "precommit"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/SamuelHornsey/javscript-router.git"

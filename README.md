@@ -31,7 +31,7 @@ Add routes to the router.
 
 ```js
 router.on('/', () => {
-    // Perform action on route
+  // Perform action on route
 });
 ```
 
@@ -39,9 +39,9 @@ On functions can be chained.
 
 ```js
 router.on('/blog', () => {
-    // Perform action on router
+  // Perform action on router
 }).on('/posts', () => {
-    // Perform action on router
+  // Perform action on router
 });
 ```
 
@@ -49,9 +49,9 @@ When all routes are added call init().
 
 ```js
 router.on('/blog', () => {
-    // Perform action on router
+  // Perform action on router
 }).on('/posts', () => {
-    // Perform action on router
+  // Perform action on router
 });
 
 router.init();
@@ -68,4 +68,13 @@ If the DOM is re-rendered or more links are added to the page the redefineLinks 
 
 ```js
 router.redefineLinks();
+```
+
+Parameters and queries are passed into the .on() function.
+
+```js
+router.on('/blog', (query, params) => {
+  // Perform action on router
+  console.log(query, params);
+});
 ```

@@ -1,6 +1,6 @@
 {
   "name": "javscript-router",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "A lightweight javascript router",
   "main": "index.js",
   "directories": {
@@ -8,7 +8,9 @@
   },
   "scripts": {
     "build:watch": "rollup -c rollup.config.js --watch",
-    "build:prod": "rollup -c rollup.config.js"
+    "build:prod": "rollup -c rollup.config.js",
+    "clean": "rimraf dist",
+    "precommit": "npm run clean && npm run build:prod && git add -A"
   },
   "repository": {
     "type": "git",
@@ -28,6 +30,8 @@
   },
   "homepage": "https://github.com/SamuelHornsey/javscript-router#readme",
   "devDependencies": {
+    "pre-commit": "^1.2.2",
+    "rimraf": "^3.0.0",
     "rollup": "^1.5.0",
     "rollup-plugin-typescript": "^1.0.0",
     "tslib": "^1.9.3",

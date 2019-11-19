@@ -24,7 +24,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/SamuelHornsey/javscript-router.git"
+    "url": "git+https://github.com/SamuelHornsey/javascript-router.git"
   },
   "keywords": [
     "Javascript",
@@ -42,7 +42,6 @@
   "devDependencies": {
     "bundlesize": "^0.18.0",
     "pre-commit": "^1.2.2",
-    "puppeteer": "^2.0.0",
     "rimraf": "^3.0.0",
     "rollup": "^1.5.0",
     "rollup-plugin-typescript": "^1.0.0",

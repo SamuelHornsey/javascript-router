@@ -1,7 +1,7 @@
 # Javascript Router
 A vanilla js router implementation 🔗
 
-### Currently *WIP*
+![npm](https://img.shields.io/npm/v/scorm-promised.svg) ![npm bundle size](https://img.shields.io/bundlephobia/minzip/scorm-promised.svg) ![NPM](https://img.shields.io/npm/l/scorm-promised.svg)
 
 A simple Javascript UI router. Written in typescript and bundled as a es6 module for use with Webpack or Rollup.
 
@@ -9,7 +9,7 @@ A simple Javascript UI router. Written in typescript and bundled as a es6 module
 
 Install using npm and webpack/rollup etc.
 ```
-npm install js-router
+npm install javascript-router
 ```
 
 Import as module.

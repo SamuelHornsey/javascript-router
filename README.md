@@ -15,7 +15,7 @@ npm install javascript-router
 Import as module.
 
 ```js
-import { Router } from 'js-router';
+import { Router } from 'javascript-router';
 ```
 
 ## Usage

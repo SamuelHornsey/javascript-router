@@ -2,7 +2,7 @@
   "name": "javascript-router",
   "version": "0.0.2",
   "description": "A lightweight javascript router",
-  "main": "index.js",
+  "main": "dist/router.mjs",
   "directories": {
     "lib": "lib"
   },

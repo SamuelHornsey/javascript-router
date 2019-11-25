@@ -1,6 +1,6 @@
 {
   "name": "javascript-router",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A lightweight javascript router",
   "main": "dist/router.mjs",
   "directories": {

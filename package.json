@@ -9,6 +9,7 @@
   "scripts": {
     "build:watch": "rollup -c rollup.config.js --watch",
     "build:prod": "rollup -c rollup.config.js",
+    "build": "npm run build:prod",
     "clean": "rimraf dist",
     "precommit": "npm run clean && npm run build:prod && npm run test && git add -A",
     "test": "bundlesize"

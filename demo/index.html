@@ -25,6 +25,18 @@
     </nav>
 
     <div>
+      <button id="btn">Go to /contact with JS</button>
+    </div>
+
+    <div>
+      <a href="/contact" data-router>
+        <div style="position: relative; width: 100px; height: 100px; background-color: red;">
+
+        </div>
+      </a>
+    </div>
+
+    <div>
       <a href="/user/123" data-router>User 123</a>
     </div>
 
@@ -51,8 +63,6 @@
           const router = new Router('/demo');
           const root = document.getElementById('root');
 
-          console.log(root);
-
           router
             .on('/', () => {
               console.log('Home');
@@ -60,7 +70,8 @@
             })
             .on('/about', () => {
               console.log('About');
-              root.innerHTML = 'About';
+              root.innerHTML = 'ABOUT <br> <a href="/" data-router>Home</a>';
+              router.redefineLinks();
             })
             .on('/contact', () => {
               console.log('Contact');
@@ -83,6 +94,12 @@
               root.innerHTML = '404';
             })
             .init();
+
+            const btn = document.querySelector('#btn');
+
+            btn.addEventListener('click', () => {
+              router.navigate('/contact');
+            })
         });
       }
     </script>

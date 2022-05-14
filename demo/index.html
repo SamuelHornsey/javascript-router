@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
+  <body>
+    <nav>
+      <ul>
+        <li>
+          <a href="/" data-router>Home</a>
+        </li>
+        <li>
+          <a href="/about" data-router>About</a>
+        </li>
+        <li>
+          <a href="/contact" data-router>Contact</a>
+        </li>
+        <li>
+          <a href="/user" data-router>User</a>
+        </li>
+      </ul>
+    </nav>
+
+    <div>
+      <button id="btn">Go to /contact with JS</button>
+    </div>
+
+    <div>
+      <a href="/contact" data-router>
+        <div style="position: relative; width: 100px; height: 100px; background-color: red;">
+
+        </div>
+      </a>
+    </div>
+
+    <div>
+      <a href="/user/123" data-router>User 123</a>
+    </div>
+
+    <div>
+      <a href="/user/123/sam" data-router>User 123 sam</a>
+    </div>
+
+    <div>
+      <a href="/user?id=123" data-router>User id=123</a>
+    </div>
+
+
+    <div>
+      <a href="/not-found" data-router>Not Found</a>
+    </div>
+
+    <div id="root">
+
+    </div>
+
+    <script>
+      {
+        import("../dist/router.mjs").then(({ Router }) => {
+          const router = new Router('/demo');
+          const root = document.getElementById('root');
+
+          router
+            .on('/', () => {
+              console.log('Home');
+              root.innerHTML = 'Home';
+            })
+            .on('/about', () => {
+              console.log('About');
+              root.innerHTML = 'ABOUT <br> <a href="/" data-router>Home</a>';
+              router.redefineLinks();
+            })
+            .on('/contact', () => {
+              console.log('Contact');
+              root.innerHTML = 'Contact';
+            })
+            .on('/user', (query) => {
+              console.log('User', query);
+              root.innerHTML = 'User' + query;
+            })
+            .on('/user/:user_id', (query, params) => {
+              console.log('User', params);
+              root.innerHTML = 'User ' + JSON.stringify(params);
+            })
+            .on('/user/:user_id/:name', (query, params) => {
+              console.log('User', params);
+              root.innerHTML = 'User ' + JSON.stringify(params);
+            })
+            .notFound(query => {
+              console.log('Not Found');
+              root.innerHTML = '404';
+            })
+            .init();
+
+            const btn = document.querySelector('#btn');
+
+            btn.addEventListener('click', () => {
+              router.navigate('/contact');
+            })
+        });
+      }
+    </script>
+  </body>
+</html>

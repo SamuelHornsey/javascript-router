@@ -1,73 +1,201 @@
+// Route interface
+interface Route {
+  path: string;
+  handler: Function;
+  params: Array<string>;
+}
+
+// Params interface
+interface Params {
+  [key: string]: string;
+}
+
+// Match interface
+interface Match {
+  match: Array<string>;
+  route: Route;
+  params: Params;
+}
+
+// Regex constants
+const PARAMS_REGEX = /[:*](\w+)/g;
+const REPLACE_VARIABLE_REGEXP = "([^/]+)";
+const FOLLOWED_BY_SLASH = "(?:/$|$)";
+
 export default class Router {
-    private routes: Map<string, (params?: any, query?: any) => any> = new Map();
-    /**
-     * Constructor
-     */
-    constructor () {
+  // Properties
+  private root: string;
+  private routes: Array<Route> = [];
+  private _notFound: Function;
 
+  // Constructor
+  constructor(root: string) {
+    this.root = root ? root : window.location.origin;
+
+    // Bind to prevent multiple click handlers
+    this.go = this.go.bind(this);
+  }
+
+  /**
+   * Initialize the router
+   */
+  public init() {
+    this.redefineLinks();
+    window.addEventListener("popstate", () => this.onChange());
+
+    this.onChange();
+  }
+
+  /**
+   * Collect links and
+   * add event listeners
+   */
+  public redefineLinks() {
+    let links = document.querySelectorAll("a[data-router]");
+
+    for (let link of links) {
+      link.addEventListener("click", this.go);
+    }
+  }
+
+  /**
+   * When that route is called
+   * @param path string
+   * @param func any
+   */
+  public on(path: string, handler: any): Router {
+    let params = path.match(PARAMS_REGEX);
+
+    if (params) {
+      params = params.map(param => param.replace(":", ""));
     }
 
-    /**
-     * Initialise the route
-     */
-    public init (): void {
-        this.redefineLinks();
-        window.addEventListener('popstate', () => this.onChange());
+    this.routes.push({
+      path,
+      handler,
+      params
+    });
 
-        this.onChange();
+    return this;
+  }
+
+  /**
+   * Set not found handler
+   * @param handler function
+   */
+  public notFound(handler: Function): Router {
+    this._notFound = handler;
+    return this;
+  }
+
+  /**
+   * Navigate to path
+   * @param path string
+   */
+  public navigate(path: string) {
+    const url = `${this.root}${path}`;
+
+    window.history.pushState(null, null, url);
+    this.onChange();
+  }
+
+  /**
+   * Replace parameters regex
+   * @param route Route
+   */
+  private replace(route: Route) {
+    const names: string[] = [];
+
+    const regex = new RegExp(
+      route.path.replace(PARAMS_REGEX, (full, name) => {
+        names.push(name);
+        return REPLACE_VARIABLE_REGEXP;
+      }) + FOLLOWED_BY_SLASH
+    );
+
+    return { regex, names };
+  }
+
+  /**
+   * Get the parameters from the URL
+   * @param match any
+   * @param names Array<string>
+   */
+  private getParams(match: any, names: Array<string>) {
+    if (names.length === 0) return null;
+    if (!match) return null;
+
+    return match
+      .splice(1, names.length)
+      .reduce((params: Params, value: string, index: number) => {
+        if (params === null) params = {};
+
+        params[names[index]] = value;
+        return params;
+      }, null);
+  }
+
+  /**
+   * Find the matching routes
+   * @param path string
+   */
+  private findRoutes(path: string): Array<Match> {
+    return this.routes
+      .map(route => {
+        const { regex, names } = this.replace(route);
+        const match = path.replace(/^\/+/, "/").match(regex);
+        const params = this.getParams(match, names);
+
+        return match ? { match, route, params } : null;
+      })
+      .filter(m => m);
+  }
+
+  /**
+   * Get the match URL
+   * @param path string
+   */
+  private match(path: string): Match {
+    return this.findRoutes(path)[0];
+  }
+
+  /**
+   * On route change
+   */
+  private onChange(): Function {
+    let url = window.location.pathname;
+    let query = window.location.search;
+
+    if (this.root) {
+      url = url.replace(this.root, "");
     }
 
-    /**
-     * Collects all the router links
-     */
-    public redefineLinks (): void {
-        let links = document.querySelectorAll('a');
+    const m = this.match(url);
 
-        links.forEach(link => {
-            if (link.hasAttribute('data-router')) {
-                link.addEventListener('click', event => this.go(event));
-            }
-        });
+    if (!m) {
+      return this._notFound(query);
     }
 
-    /**
-     * Function to run on that route
-     * @param route string
-     */
-    public on (route: string, cb: (param?: any, query?: any) => any) : Router {
-        this.routes.set(route, cb);
-        return this;
-    }
+    const { route, params } = m;
 
-    /**
-     * Go to url
-     * @param event any
-     */
-    private go (event: any) : void {
-        event.preventDefault();
-        window.history.pushState(null, null, event.target.href);
-        this.onChange();
-    }
+    return route.handler(query, params);
+  }
 
-    /**
-     * On route change
-     */
-    private onChange () : void {
-        let url = window.location.pathname;
-        let searchParams = new URLSearchParams(window.location.search);
-        let query: any = {};
+  /**
+   * Go to URL
+   * @param event any
+   */
+  private go(event: any) {
+    event.preventDefault();
 
-        for (let entry of searchParams.entries()) {
-            let [key, val] = entry;
-            query[key] = val;
-        }
+    const query = event.target.closest('a').search;
+    const pathname = event.target.closest('a').pathname;
 
-        let handler = this.routes.get(url);
+    const url = query
+      ? `${this.root}${pathname}${query}`
+      : `${this.root}${pathname}`;
 
-        if (handler) {
-            handler({}, query);
-        }
-
-        return;
-    }
+    window.history.pushState(null, null, url);
+    this.onChange();
+  }
 }

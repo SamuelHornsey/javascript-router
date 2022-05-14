@@ -1,18 +1,31 @@
 {
-  "name": "javscript-router",
-  "version": "1.0.0",
+  "name": "javascript-router",
+  "version": "0.0.4",
   "description": "A lightweight javascript router",
-  "main": "index.js",
+  "main": "dist/router.mjs",
   "directories": {
     "lib": "lib"
   },
   "scripts": {
     "build:watch": "rollup -c rollup.config.js --watch",
-    "build:prod": "rollup -c rollup.config.js"
+    "build:prod": "rollup -c rollup.config.js",
+    "build": "npm run build:prod",
+    "clean": "rimraf dist",
+    "precommit": "npm run clean && npm run build:prod && npm run test && git add -A",
+    "test": "bundlesize"
   },
+  "pre-commit": [
+    "precommit"
+  ],
+  "bundlesize": [
+    {
+      "path": "./dist/router.mjs",
+      "maxSize": "3 kB"
+    }
+  ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/SamuelHornsey/javscript-router.git"
+    "url": "git+https://github.com/SamuelHornsey/javascript-router.git"
   },
   "keywords": [
     "Javascript",
@@ -28,9 +41,12 @@
   },
   "homepage": "https://github.com/SamuelHornsey/javscript-router#readme",
   "devDependencies": {
+    "bundlesize": "^0.18.0",
+    "pre-commit": "^1.2.2",
+    "rimraf": "^3.0.0",
     "rollup": "^1.5.0",
     "rollup-plugin-typescript": "^1.0.0",
     "tslib": "^1.9.3",
-    "typescript": "^3.3.3333"
+    "typescript": "^3.7.2"
   }
 }

@@ -31,6 +31,9 @@ export default class Router {
   // Constructor
   constructor(root: string) {
     this.root = root ? root : window.location.origin;
+
+    // Bind to prevent multiple click handlers
+    this.go = this.go.bind(this);
   }
 
   /**
@@ -51,7 +54,7 @@ export default class Router {
     let links = document.querySelectorAll("a[data-router]");
 
     for (let link of links) {
-      link.addEventListener("click", event => this.go(event));
+      link.addEventListener("click", this.go);
     }
   }
 
@@ -83,6 +86,17 @@ export default class Router {
   public notFound(handler: Function): Router {
     this._notFound = handler;
     return this;
+  }
+
+  /**
+   * Navigate to path
+   * @param path string
+   */
+  public navigate(path: string) {
+    const url = `${this.root}${path}`;
+
+    window.history.pushState(null, null, url);
+    this.onChange();
   }
 
   /**
@@ -173,11 +187,13 @@ export default class Router {
    */
   private go(event: any) {
     event.preventDefault();
-    const query = event.target.search;
+
+    const query = event.target.closest('a').search;
+    const pathname = event.target.closest('a').pathname;
 
     const url = query
-      ? `${this.root}${event.target.pathname}${query}`
-      : `${this.root}${event.target.pathname}`;
+      ? `${this.root}${pathname}${query}`
+      : `${this.root}${pathname}`;
 
     window.history.pushState(null, null, url);
     this.onChange();

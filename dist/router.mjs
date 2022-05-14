@@ -7,6 +7,8 @@ class Router {
     constructor(root) {
         this.routes = [];
         this.root = root ? root : window.location.origin;
+        // Bind to prevent multiple click handlers
+        this.go = this.go.bind(this);
     }
     /**
      * Initialize the router
@@ -23,7 +25,7 @@ class Router {
     redefineLinks() {
         let links = document.querySelectorAll("a[data-router]");
         for (let link of links) {
-            link.addEventListener("click", event => this.go(event));
+            link.addEventListener("click", this.go);
         }
     }
     /**
@@ -50,6 +52,15 @@ class Router {
     notFound(handler) {
         this._notFound = handler;
         return this;
+    }
+    /**
+     * Navigate to path
+     * @param path string
+     */
+    navigate(path) {
+        const url = `${this.root}${path}`;
+        window.history.pushState(null, null, url);
+        this.onChange();
     }
     /**
      * Replace parameters regex
@@ -125,10 +136,11 @@ class Router {
      */
     go(event) {
         event.preventDefault();
-        const query = event.target.search;
+        const query = event.target.closest('a').search;
+        const pathname = event.target.closest('a').pathname;
         const url = query
-            ? `${this.root}${event.target.pathname}${query}`
-            : `${this.root}${event.target.pathname}`;
+            ? `${this.root}${pathname}${query}`
+            : `${this.root}${pathname}`;
         window.history.pushState(null, null, url);
         this.onChange();
     }

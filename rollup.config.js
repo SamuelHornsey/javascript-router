@@ -1,5 +1,5 @@
 // rollup.config.js
-import typescript from "rollup-plugin-typescript";
+import typescript from "@rollup/plugin-typescript";
 
 const esm = {
   input: "lib/index.ts",
